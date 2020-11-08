@@ -28,6 +28,8 @@ public class NewFileHandler implements Runnable {
     private List<NewFileConsumer> nfcs = new ArrayList<NewFileConsumer>();
 
 	private boolean emptyIt;
+
+	private boolean abort;
     
     private NewFileHandler() {         
     }
@@ -85,7 +87,11 @@ public class NewFileHandler implements Runnable {
                 	emptyIt = false;
                 }
                 Thread.sleep(1000);
-            }            
+            }
+            if (abort) {
+            	logger.debug("aborting ..." + abort);
+            	queue.clear();
+            }
             logger.debug("stopping, queue size: " + queue.size());
             while (queue.size() > 0) {
             	peekNPoll();
@@ -135,5 +141,14 @@ public class NewFileHandler implements Runnable {
 			logger.debug("I throw this away.");
 			queue.poll(); // throw it away
 		}
+	}
+
+	/**
+	 * We stop all further file-processing.
+	 */
+	public synchronized void doAbort() {
+		logger.debug("doAbort()");
+		stop = true;
+		abort = true;		
 	}
 }

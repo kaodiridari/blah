@@ -29,6 +29,8 @@ public class MainPane extends BorderPane {
 	private Button buttonDisk;
 	private ButtonBase buttonFilter;
 
+	private Button buttonDiskOff;
+
     public MainPane(Stage stage, Pane preview, Pane player, ToolBarHandler tbh) throws Exception {
         logger.debug("Constructor");
 
@@ -106,7 +108,25 @@ public class MainPane extends BorderPane {
                 @Override
                 public void handle(ActionEvent event) {
                     try {
-                        tbh.diskPressed3();
+                        tbh.diskPressed();
+                    } catch (Exception e) {
+                        // TODO Exception handling
+                        logger.error("ups", e);
+                    }
+                }
+            });
+        }
+        {
+            FileInputStream input = new FileInputStream("src/main/resources/images/disk-off.png");
+            Image image = new Image(input);
+            ImageView imageView = new ImageView(image);
+            buttonDiskOff = new Button("", imageView);
+            toolBar.getItems().add(buttonDiskOff);
+            buttonDiskOff.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    try {
+                        tbh.diskOffPressed();
                     } catch (Exception e) {
                         // TODO Exception handling
                         logger.error("ups", e);

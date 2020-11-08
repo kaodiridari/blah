@@ -171,13 +171,20 @@ public class ToolBarHandler {
 //		t.start();
 //	}
 
-	public void diskPressed3() throws Exception {
-		logger.debug("diskPressed3()");
+	public void diskPressed() throws Exception {
+		logger.debug("diskPressed()");
 		
 		ss = new MyScanService(nfh, Paths.get(Constants.getProperty("cache")));		
 		Thread thread = new Thread(ss);
 		thread.start();
 	}
+	
+	public void diskOffPressed() throws Exception {
+		logger.debug("diskOffPressed()");
+		
+		ss.doStop();
+	}
+	
 	
 	/**
 	 * Choose a video-file in the cache for getting values for resolution, video-codec ...
