@@ -2,7 +2,6 @@ package koa.diridari;
 
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
@@ -64,6 +63,6 @@ public class MyWatchService implements Runnable {
     public void doStop() {
         logger.debug("stopping");
         this.stop = true;
-        newFileHandler.doStop();
+        //newFileHandler.doStop();
     }
 }

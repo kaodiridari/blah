@@ -1,6 +1,7 @@
 package koa.diridari;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,11 +24,29 @@ public class NewFileHandler implements Runnable {
     //private LinkedList<Path> queue = new LinkedList<Path>();
 
     private boolean stop;
-
-    private NewFileConsumer newFileConsumer;
     
-    public NewFileHandler(NewFileConsumer nfc) {
-        newFileConsumer = nfc; 
+    private List<NewFileConsumer> nfcs = new ArrayList<NewFileConsumer>();
+
+	private boolean emptyIt;
+    
+    private NewFileHandler() {         
+    }
+    
+    private static NewFileHandler me;
+    
+    public static synchronized NewFileHandler getInstance() {
+    	if (me == null) {
+    		me = new NewFileHandler(); 
+    		Thread t_nfh = new Thread(me);
+    		t_nfh.start();
+    	}
+    	return me;
+    }
+    
+    public void addConsumer(NewFileConsumer nfc) {
+    	if (!nfcs.contains(nfc)) {
+    		nfcs.add(nfc);
+    	}
     }
     
     public void handleNewFile(Path p) {
@@ -35,9 +54,18 @@ public class NewFileHandler implements Runnable {
         queue.offer(p);
     }
 
-    public void doStop() {
+    public synchronized void doStop() {
         logger.debug("stopping");
         this.stop = true;
+    }
+    
+    /**
+     * This is used for removing the last thing in the queue.
+     * @throws Exception 
+     */
+    public synchronized void doEmptyQueue() throws Exception {
+    	logger.debug("doEmptyQueue() " + " emptyIt: " + emptyIt); 
+    	emptyIt = true;
     }
 
     /**
@@ -48,8 +76,13 @@ public class NewFileHandler implements Runnable {
         logger.debug("NewFileHandler running");
         try {
             while (!stop) {
+            	logger.debug("run() queue.size() = " + queue.size());
                 if (queue.size() >= 2) {
                 	peekNPoll();
+                } else if (emptyIt) {
+                	logger.debug("emptyIt");
+                	peekNPoll();
+                	emptyIt = false;
                 }
                 Thread.sleep(1000);
             }            
@@ -90,7 +123,9 @@ public class NewFileHandler implements Runnable {
 			}
 			if (pil != null && pil.size() == 1) {
 				MyImage myImage = pil.get(0);
-				newFileConsumer.onNewFile(myImage);
+				for (NewFileConsumer nfc : nfcs) {
+					nfc.onNewFile(myImage);
+				}				
 				logger.debug("I did it, I did it. " + myImage.getOutputPathVideoChunck());
 				queue.poll();
 			} else {

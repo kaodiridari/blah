@@ -106,7 +106,7 @@ public class MainPane extends BorderPane {
                 @Override
                 public void handle(ActionEvent event) {
                     try {
-                        tbh.diskPressed2();
+                        tbh.diskPressed3();
                     } catch (Exception e) {
                         // TODO Exception handling
                         logger.error("ups", e);

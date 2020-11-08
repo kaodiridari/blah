@@ -27,9 +27,13 @@ public class ToolBarHandler {
     private NewFileHandler nfh;
 
     private MyWatchService ws;
+    
+    private MyScanService ss;
 
     public ToolBarHandler(PreviewModell previewModel) {
         this.previewModel = previewModel;
+        nfh = NewFileHandler.getInstance();
+        nfh.addConsumer(previewModel);
     }
 
     /**
@@ -110,12 +114,9 @@ public class ToolBarHandler {
      * @throws Exception
      */
     public void monitorPressed() throws Exception {
-        logger.debug("monitorPressed");
+        logger.debug("monitorPressed");        
         
-        nfh = new NewFileHandler(previewModel);
-        ws = new MyWatchService(nfh, Paths.get(Constants.getProperty("cache")));
-        Thread t_nfh = new Thread(nfh);
-        t_nfh.start();
+        ws = new MyWatchService(nfh, Paths.get(Constants.getProperty("cache")));        
         Thread thread = new Thread(ws);
         thread.start();
         
@@ -133,56 +134,51 @@ public class ToolBarHandler {
         
         ws.doStop();
     }
-
-    /**
-     * Starts processing of a whole folder.<br>
-     * The folder is configured in the property cache.  
-     * @throws Exception 
-     */
-	public void diskPressed() throws Exception {		
-		logger.debug("diskPressed()");
-		List<MyImage> previews = FfmpegHelper.getPreviewImageList();
-		for (MyImage myImage : previews) {
-			previewModel.onNewFile(myImage);
-		}		
-	}
 	
 	/**
      * Starts processing of a whole folder.<br>
      * The folder is configured in the property cache.  
      * @throws Exception 
      */
-	public void diskPressed2() throws Exception {		
-		logger.debug("diskPressed2()");
-		Runnable runMe = new Runnable() {
-			
-			@Override
-			public void run() {
-				try {
-					VideoStruct referenceVideoStruct = new VideoStruct(1280, 720, "h264");
-					Iterator<Path> it = Files.list(Paths.get(Constants.getProperty("cache"))).iterator();		
-					while (it.hasNext()) {
-						Path path = it.next();
-						Path quasiConcat = FfmpegHelper.checkSingle(path, referenceVideoStruct);
-						if (quasiConcat != null) {
-							MyImage myImage = 
-									FfmpegHelper.getPreviewImageList(
-											new Date(0), new Date(), referenceVideoStruct,
-											quasiConcat).get(0);
-							previewModel.onNewFile(myImage);
-						}
-					}
-					logger.debug("All files in cache are well done.");
-				} catch (Exception e) {
-					logger.error("ups", e);
-				}
-			}
-		};
-		
-		Thread t = new Thread(runMe);
-		t.start();
-	}
+//	public void diskPressed2() throws Exception {		
+//		logger.debug("diskPressed2()");
+//		Runnable runMe = new Runnable() {
+//			
+//			@Override
+//			public void run() {
+//				try {
+//					VideoStruct referenceVideoStruct = new VideoStruct(1280, 720, "h264");
+//					Iterator<Path> it = Files.list(Paths.get(Constants.getProperty("cache"))).iterator();		
+//					while (it.hasNext()) {
+//						Path path = it.next();
+//						Path quasiConcat = FfmpegHelper.checkSingle(path, referenceVideoStruct);
+//						if (quasiConcat != null) {
+//							MyImage myImage = 
+//									FfmpegHelper.getPreviewImageList(
+//											new Date(0), new Date(), referenceVideoStruct,
+//											quasiConcat).get(0);
+//							previewModel.onNewFile(myImage);
+//						}
+//					}
+//					logger.debug("All files in cache are well done.");
+//				} catch (Exception e) {
+//					logger.error("ups", e);
+//				}
+//			}
+//		};
+//		
+//		Thread t = new Thread(runMe);
+//		t.start();
+//	}
 
+	public void diskPressed3() throws Exception {
+		logger.debug("diskPressed3()");
+		
+		ss = new MyScanService(nfh, Paths.get(Constants.getProperty("cache")));		
+		Thread thread = new Thread(ss);
+		thread.start();
+	}
+	
 	/**
 	 * Choose a video-file in the cache for getting values for resolution, video-codec ...
 	 */
