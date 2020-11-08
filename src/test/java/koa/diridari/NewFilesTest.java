@@ -31,33 +31,33 @@ public class NewFilesTest {
     final public Path cacheDir = Paths.get("C:\\Users\\user\\Videos\\temp");
     
     
-    @Test
-    public void test(@TempDir Path tempDir) throws Exception {
-        
-        NewFileConsumer tnfc = new TestNewFileConsumer();
-        NewFileHandler nfh = new NewFileHandler(tnfc);
-        MyWatchService ws = new MyWatchService(nfh, tempDir);
-        Thread t_nfh = new Thread(nfh);
-        t_nfh.start();
-        Thread t_ws = new Thread(ws);
-        t_ws.start();
-        
-        Thread.sleep(1000); //Watch service needs time to start.
-        
-        //we copy Files        
-        File cacheFolder = cacheDir.toFile();
-        int n = 0;
-        for (File f : cacheFolder.listFiles()){
-            Path source = cacheFolder.toPath().resolve(f.toPath());
-            Path target = tempDir.resolve(f.getName());
-            logger.debug("source: " + source + " target: " + target);
-            Files.copy(source, target);
-            n++;
-            Thread.sleep(5000);
-        } 
-        logger.debug("n: " + n);
-        assertEquals(n-1, ((TestNewFileConsumer)tnfc).received);
-    }
+//    @Test
+//    public void test(@TempDir Path tempDir) throws Exception {
+//        
+//        NewFileConsumer tnfc = new TestNewFileConsumer();
+//        NewFileHandler nfh = new NewFileHandler(tnfc);
+//        MyWatchService ws = new MyWatchService(nfh, tempDir);
+//        Thread t_nfh = new Thread(nfh);
+//        t_nfh.start();
+//        Thread t_ws = new Thread(ws);
+//        t_ws.start();
+//        
+//        Thread.sleep(1000); //Watch service needs time to start.
+//        
+//        //we copy Files        
+//        File cacheFolder = cacheDir.toFile();
+//        int n = 0;
+//        for (File f : cacheFolder.listFiles()){
+//            Path source = cacheFolder.toPath().resolve(f.toPath());
+//            Path target = tempDir.resolve(f.getName());
+//            logger.debug("source: " + source + " target: " + target);
+//            Files.copy(source, target);
+//            n++;
+//            Thread.sleep(5000);
+//        } 
+//        logger.debug("n: " + n);
+//        assertEquals(n-1, ((TestNewFileConsumer)tnfc).received);
+//    }
 }
 
 class TestNewFileConsumer implements NewFileConsumer {
