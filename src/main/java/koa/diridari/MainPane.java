@@ -1,6 +1,7 @@
 package koa.diridari;
 
 import java.io.FileInputStream;
+import java.io.InputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,8 +46,10 @@ public class MainPane extends BorderPane {
 //	    setTop(menuBar);
         ToolBar toolBar = new ToolBar();
         {
-            FileInputStream input = new FileInputStream("src/main/resources/images/link.png");
-            Image image = new Image(input);
+        	Image image;
+        	try(InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream("images/link.png")) {            
+        		image = new Image(input);
+        	}
             ImageView imageView = new ImageView(image);
             buttonLink = new Button("", imageView);
             toolBar.getItems().add(buttonLink);
@@ -63,8 +66,10 @@ public class MainPane extends BorderPane {
             });
         }
         {
-            FileInputStream input = new FileInputStream("src/main/resources/images/eye.png");
-            Image image = new Image(input);
+        	Image image;
+        	try(InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream("images/eye.png")){            
+        		image = new Image(input);
+        	}
             ImageView imageView = new ImageView(image);
             buttonStartMonitor = new Button("", imageView);
             toolBar.getItems().add(buttonStartMonitor);
@@ -81,8 +86,10 @@ public class MainPane extends BorderPane {
             });
         }
         {
-            FileInputStream input = new FileInputStream("src/main/resources/images/eye-off.png");
-            Image image = new Image(input);
+        	Image image;
+        	try(InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream("images/eye-off.png")){
+        		image = new Image(input);
+        	}
             ImageView imageView = new ImageView(image);
             buttonStopMonitor = new Button("", imageView);
             toolBar.getItems().add(buttonStopMonitor);
@@ -99,8 +106,10 @@ public class MainPane extends BorderPane {
             });
         }
         {
-            FileInputStream input = new FileInputStream("src/main/resources/images/disk.png");
-            Image image = new Image(input);
+        	Image image;
+        	try(InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream("images/disk.png")){
+        		image = new Image(input);
+        	}
             ImageView imageView = new ImageView(image);
             buttonDisk = new Button("", imageView);
             toolBar.getItems().add(buttonDisk);
@@ -117,8 +126,10 @@ public class MainPane extends BorderPane {
             });
         }
         {
-            FileInputStream input = new FileInputStream("src/main/resources/images/disk-off.png");
-            Image image = new Image(input);
+        	Image image;
+        	try(InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream("images/disk-off.png")){            
+        		image = new Image(input);
+        	}
             ImageView imageView = new ImageView(image);
             buttonDiskOff = new Button("", imageView);
             toolBar.getItems().add(buttonDiskOff);
@@ -135,8 +146,10 @@ public class MainPane extends BorderPane {
             });
         }
         {
-            FileInputStream input = new FileInputStream("src/main/resources/images/filter.png");
-            Image image = new Image(input);
+        	Image image;
+        	try(InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream("images/filter.png")){
+        		image = new Image(input);
+        	}
             ImageView imageView = new ImageView(image);
             buttonFilter = new Button("", imageView);
             toolBar.getItems().add(buttonFilter);

@@ -22,7 +22,7 @@
 		<junit>5.5.0</junit>
 		<logforj>2.13.3</logforj>
 		<javafx>15</javafx>
-		
+
 		<!-- Plugin versions -->
 		<maven.shade>3.2.2</maven.shade>
 		<maven.clean>3.1.0</maven.clean>
@@ -53,12 +53,12 @@
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
 			<version>${javafx}</version>
-		</dependency>		
+		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-media</artifactId>
 			<version>${javafx}</version>
-		</dependency>		
+		</dependency>
 		<!-- Testing dependencies -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -156,6 +156,29 @@
 					<!-- <mainClass>koa.blah.HelloFX</mainClass> -->
 					<mainClass>koa.diridari.Main</mainClass>
 				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.3.0</version>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>koa.diridari.Main</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id> <!-- this is used for inheritance merges -->
+						<phase>package</phase> <!-- bind to the packaging phase -->
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
